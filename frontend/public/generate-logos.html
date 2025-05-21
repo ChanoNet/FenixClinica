@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generador de Logos para FenixClinicas</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f7;
+            color: #333;
+        }
+        h1 {
+            color: #6200ea;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .logo-preview {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .logo-preview:hover {
+            transform: translateY(-5px);
+        }
+        h2 {
+            color: #6200ea;
+            margin-top: 0;
+        }
+        canvas {
+            border-radius: 8px;
+            margin: 10px 0;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+        button {
+            padding: 12px 20px;
+            background-color: #6200ea;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 5px rgba(98,0,234,0.3);
+        }
+        button:hover {
+            background-color: #4a00e0;
+            box-shadow: 0 5px 10px rgba(98,0,234,0.5);
+        }
+        .instructions {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        ol {
+            padding-left: 25px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Generador de Logos para FenixClinicas</h1>
+    
+    <div class="instructions">
+        <p>Esta herramienta genera los logos necesarios para la aplicación con un diseño profesional. Sigue estos pasos:</p>
+        <ol>
+            <li>Haz clic en los botones "Descargar" para cada logo</li>
+            <li>Mueve los archivos descargados a la carpeta <code>/frontend/public/</code> de tu proyecto</li>
+            <li>Reinicia tu aplicación para que los nuevos logos sean utilizados</li>
+        </ol>
+    </div>
+
+    <div class="container">
+        <div class="logo-preview">
+            <h2>Logo 192x192</h2>
+            <canvas id="canvas192" width="192" height="192"></canvas>
+            <br>
+            <button onclick="downloadLogo(192)">Descargar logo192.png</button>
+        </div>
+
+        <div class="logo-preview">
+            <h2>Logo 512x512</h2>
+            <canvas id="canvas512" width="512" height="512"></canvas>
+            <br>
+            <button onclick="downloadLogo(512)">Descargar logo512.png</button>
+        </div>
+    </div>
+
+    <script>
+        // Función para dibujar los logos
+        function drawLogo(size) {
+            const canvas = document.getElementById(`canvas${size}`);
+            const ctx = canvas.getContext('2d');
+            
+            // Crear gradiente para el fondo
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#6200ea');    // Morado principal
+            gradient.addColorStop(1, '#8535ee');    // Morado más claro
+            
+            // Dibujar fondo con gradiente
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // Añadir efecto de resplandor suave
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.beginPath();
+            ctx.arc(size * 0.3, size * 0.3, size * 0.5, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Dibujar símbolo feníx estilizado
+            const centerX = size / 2;
+            const centerY = size / 2;
+            
+            // Crear gradiente para el símbolo
+            const symbolGradient = ctx.createLinearGradient(
+                centerX - size * 0.3, 
+                centerY - size * 0.3, 
+                centerX + size * 0.3, 
+                centerY + size * 0.3
+            );
+            symbolGradient.addColorStop(0, 'white');
+            symbolGradient.addColorStop(1, '#f0f0f0');
+            
+            // Dibujar círculo exterior
+            ctx.strokeStyle = symbolGradient;
+            ctx.lineWidth = size * 0.05;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, size * 0.35, 0, 2 * Math.PI);
+            ctx.stroke();
+            
+            // Dibujar la F estilizada
+            ctx.fillStyle = 'white';
+            ctx.font = `bold ${size * 0.5}px 'Segoe UI', Tahoma, sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('FC', centerX, centerY);
+            
+            // Añadir sombra suave
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+            ctx.shadowBlur = size * 0.03;
+            ctx.shadowOffsetX = size * 0.01;
+            ctx.shadowOffsetY = size * 0.01;
+            
+            // Añadir brillo para darle profundidad
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.beginPath();
+            ctx.arc(centerX - size * 0.15, centerY - size * 0.15, size * 0.1, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+        
+        // Función para descargar el logo
+        function downloadLogo(size) {
+            const canvas = document.getElementById(`canvas${size}`);
+            const dataURL = canvas.toDataURL('image/png');
+            const downloadLink = document.createElement('a');
+            downloadLink.href = dataURL;
+            downloadLink.download = `logo${size}.png`;
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        }
+        
+        // Dibujar los logos cuando se carga la página
+        window.onload = function() {
+            drawLogo(192);
+            drawLogo(512);
+        };
+    </script>
+</body>
+</html>

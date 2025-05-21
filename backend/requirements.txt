@@ -1,0 +1,11 @@
+Django>=4.2,<5.0
+djangorestframework>=3.14,<3.15
+psycopg2-binary>=2.9,<3.0
+python-dotenv>=1.0,<1.1
+gunicorn>=21.2,<22.0
+drf-yasg>=1.21.7,<1.22.0 # For Swagger/OpenAPI documentation
+djangorestframework-simplejwt>=5.3.0,<5.4.0 # Para la autenticación JWT
+django-cors-headers>=4.3.0,<4.4.0 # Para manejar CORS
+Pillow>=10.0.0,<11.0.0 # Para el procesamiento de imágenes
+django-filter>=24.1,<24.2 # Para filtrado de consultas
+django-model-utils>=4.3.1,<4.4.0 # Clases útiles para modelos

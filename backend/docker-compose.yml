@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fenixclinicas_backend
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app  # Monta el código local en el contenedor para desarrollo
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env  # Carga variables de entorno desde el archivo .env
+    depends_on:
+      - db
+    networks:
+      - fenixclinicas_network
+
+  db:
+    image: postgres:15-alpine
+    container_name: fenixclinicas_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    networks:
+      - fenixclinicas_network
+
+volumes:
+  postgres_data:
+
+networks:
+  fenixclinicas_network:
+    driver: bridge
